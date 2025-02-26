@@ -1,0 +1,80 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Test Case 1 [101]
+      id: test-case-1-101
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Test Case 1 [101]
+        setup-command: ''
+        command: python3 grade_converter.py
+        input: '101'
+        expected-output: |-
+          ===== Grade Converter =====
+          Enter a numerical grade (1-100): A+
+        comparison-method: exact
+        timeout: 10
+        max-score: 5
+    - name: Test Case 2 [64]
+      id: test-case-2-64
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Test Case 2 [64]
+        setup-command: ''
+        command: python3 grade_converter.py
+        input: '64'
+        expected-output: |-
+          ===== Grade Converter =====
+          Enter a numerical grade (1-100): F
+        comparison-method: exact
+        timeout: 10
+        max-score: 5
+    - name: Test Case 3 [88]
+      id: test-case-3-88
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Test Case 3 [88]
+        setup-command: ''
+        command: python3 grade_converter.py
+        input: '88'
+        expected-output: |-
+          ===== Grade Converter =====
+          Enter a numerical grade (1-100): B
+        comparison-method: exact
+        timeout: 10
+        max-score: 5
+    - name: Test Case 4 [90]
+      id: test-case-4-90
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Test Case 4 [90]
+        setup-command: ''
+        command: python3 grade_converter.py
+        input: '90'
+        expected-output: |-
+          ===== Grade Converter =====
+          Enter a numerical grade (1-100): A
+        comparison-method: exact
+        timeout: 10
+        max-score: 5
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST-CASE-1-101_RESULTS: "${{steps.test-case-1-101.outputs.result}}"
+        TEST-CASE-2-64_RESULTS: "${{steps.test-case-2-64.outputs.result}}"
+        TEST-CASE-3-88_RESULTS: "${{steps.test-case-3-88.outputs.result}}"
+        TEST-CASE-4-90_RESULTS: "${{steps.test-case-4-90.outputs.result}}"
+      with:
+        runners: test-case-1-101,test-case-2-64,test-case-3-88,test-case-4-90
